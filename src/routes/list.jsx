@@ -157,7 +157,7 @@ class TodoListPage extends React.Component {
         <ul key="itemList">
           {
             this.state.items.map((item, i) => (
-              <li key={ i }>
+              <li key={ item._id || i }>
                 <span 
                   className={ `checkbox ${ item.done ? `checked` : ``}` }
                   tabIndex={ 0 }
@@ -169,7 +169,7 @@ class TodoListPage extends React.Component {
                   } } />
 
                 <input
-                  ref={ `input${ i }` }
+                  ref={ `input${ item._id || i }` }
                   type={ `text` }
                   value={ item.title }
                   onChange={ (e) => this.onChange(e, `items`, i, `title`) } 
