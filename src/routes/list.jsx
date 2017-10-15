@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import { browserHistory, Link } from 'react-router';
+import { browserHistory } from 'react-router';
 import { $ } from '../helpers/ApiHelper.js';
 
 class TodoListPage extends React.Component {

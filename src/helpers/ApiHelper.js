@@ -4,7 +4,6 @@ const API_URL = `/api/v1`;
 
 const $ = (options) => {
   let request = new XMLHttpRequest(),
-    time = new Date(),
     params = options.params ? `?${ Object.keys(options.params)
                   .map((opt) => {
                     return `${ opt }=${ options.params[opt] }`;
