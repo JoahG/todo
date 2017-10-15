@@ -42,14 +42,6 @@ let getGitHead = (next) => {
   });
 }
 
-app.use((req, res, next) => {
-  if (req.secure || !process.env.NODE_ENV || process.env.NODE_ENV == `development` || req.headers[`x-forwarded-proto`] == `https`) {
-    next();
-  } else {
-    res.redirect(`https://${ req.headers.host.replace(/\:\d+/g, '') }${ req.url }`);
-  }
-});
-
 app.use(bodyParser.json());
 app.use(`/api/v1`, api);
 
