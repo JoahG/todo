@@ -140,7 +140,7 @@ class TodoListPage extends React.Component {
                   ref={ `input${ i }` }
                   type={ `text` }
                   value={ item.title }
-                  onChange={ (e) => this.onChange(e, `items`, i, `title`) } />
+                  onBlur={ (e) => this.onChange(e, `items`, i, `title`) } />
               </li>
             ))
           }
