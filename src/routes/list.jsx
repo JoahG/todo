@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import { browserHistory } from 'react-router';
+import { browserHistory, Link } from 'react-router';
 import { $ } from '../helpers/ApiHelper.js';
 
 class TodoListPage extends React.Component {
@@ -20,7 +20,20 @@ class TodoListPage extends React.Component {
     }
   }
 
-  onChange(e, stateKey, index, prop, value) {
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      title: ``,
+      items: [],
+      updated_at: undefined,
+      _id: undefined
+    }, () => {
+      if (nextProps.params.id && nextProps.params.id.length > 0) {
+        this.getList();
+      }
+    });
+  }
+
+  onChange(e, stateKey, index, prop, value, shouldUpdate) {
     e.preventDefault();
 
     let state = { };
@@ -30,14 +43,15 @@ class TodoListPage extends React.Component {
     } else {
       state[stateKey] = this.state[stateKey];
 
-      if (prop !== `done`) state[stateKey][index][prop] = e.target.value; 
-      else state[stateKey][index][prop] = value; 
+      if (prop !== `done`) {
+        state[stateKey][index][prop] = e.target.value; 
+      } else {
+        state[stateKey][index][prop] = value; 
+      }
     }
 
     this.setState(state, () => {
-      if (this.props.params.id && this.props.params.id.length > 0) {
-        this.updateListItem(state[stateKey][index]);
-      }
+      if (shouldUpdate) this.updateListItem(state[stateKey][index]);
     });
 
     return false;
@@ -46,13 +60,15 @@ class TodoListPage extends React.Component {
   addItem(e) {
     e.preventDefault();
 
-    let items = this.state.items;
+    let items = this.state.items,
+      title = e.target.value;
     items.push({
-      title: ``,
+      title,
       done: false
     });
     this.setState({ items }, () => {
       this.refs[`input${ this.state.items.length - 1 }`].focus();
+      this.refs[`input${ this.state.items.length - 1 }`].selectionStart = title.length;
     });
 
     return false;
@@ -64,7 +80,21 @@ class TodoListPage extends React.Component {
       url: `/lists/${ this.props.params.id }`,
       success: (data) => {
         if (data.success) {
-          this.setState(data.list);
+          this.setState({
+            ...data.list,
+            items: data.list.items.sort((a, b) => {
+              let a_d = +(new Date(a.created_at)),
+                b_d = +(new Date(b.created_at));
+
+              if (a_d > b_d) return 1;
+              if (b_d > a_d) return -1;
+              return 0;
+            }).sort((a, b) => {
+              if (a.done && !b.done) return 1;
+              if (b.done && !a.done) return -1;
+              return 0;
+            }).filter((item) => item.title.length > 0)
+          });
         } else {
           browserHistory.push(`/`);
         }
@@ -92,6 +122,8 @@ class TodoListPage extends React.Component {
   }
 
   updateListItem(item) {
+    if (!this.props.params.id || this.props.params.id.length == 0) return false;
+
     $({
       type: `PUT`,
       url: `/lists/${ this.props.params.id }/items/${ item._id || `new` }`,
@@ -108,10 +140,10 @@ class TodoListPage extends React.Component {
     let newList = !this.props.params.id || this.props.params.id.length == 0;
 
     return (
-      <div className="list-wrapper">
+      <div className="list-wrapper" key="rootNode">
         {
           !newList ? (
-            <a href="/">New List</a>
+            <Link to="/">New List</Link>
           ) : ``
         }
         <div className="title-wrapper">
@@ -122,17 +154,17 @@ class TodoListPage extends React.Component {
             value={ this.state.title } 
             onChange={ (e) => this.onChange(e, `title`) } />
         </div>
-        <ul>
+        <ul key="itemList">
           {
             this.state.items.map((item, i) => (
               <li key={ i }>
                 <span 
                   className={ `checkbox ${ item.done ? `checked` : ``}` }
                   tabIndex={ 0 }
-                  onClick={ (e) => this.onChange(e, `items`, i, `done`, !item.done) }
+                  onClick={ (e) => this.onChange(e, `items`, i, `done`, !item.done, true) }
                   onKeyPress={ (e) => {
                     if (e.key == ` `) {
-                      this.onChange(e, `items`, i, `done`, !item.done);
+                      this.onChange(e, `items`, i, `done`, !item.done, true);
                     }
                   } } />
 
@@ -140,7 +172,8 @@ class TodoListPage extends React.Component {
                   ref={ `input${ i }` }
                   type={ `text` }
                   value={ item.title }
-                  onBlur={ (e) => this.onChange(e, `items`, i, `title`) } />
+                  onChange={ (e) => this.onChange(e, `items`, i, `title`) } 
+                  onBlur={ () => this.updateListItem(item) } />
               </li>
             ))
           }
@@ -148,15 +181,16 @@ class TodoListPage extends React.Component {
             !this.state.items || 
             this.state.items.length == 0 || 
             this.state.items[this.state.items.length - 1].title.length > 0 ? (
-              <li>
+              <li key={ this.state.items.length }>
                 <span 
                   className={ `checkbox` }
                   tabIndex={ -1 } />
 
                 <input
+                  key={ `input${ this.state.items.length }` }
                   type={ `text` }
                   value={ `` }
-                  onFocus={ this.addItem.bind(this) } />
+                  onChange={ this.addItem.bind(this) } />
               </li>
             ) : ``
           }

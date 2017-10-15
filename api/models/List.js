@@ -11,6 +11,16 @@ let ItemSchema = new Schema({
     type: Boolean,
     default: false,
     required: true
+  },
+  created_at: {
+    type: Date,
+    required: true,
+    default: new Date(0)
+  },
+  updated_at: {
+    type: Date,
+    required: true,
+    default: new Date(0)
   }
 });
 

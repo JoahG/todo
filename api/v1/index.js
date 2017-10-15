@@ -8,6 +8,13 @@ router.post(`/lists`, (req, res) => {
   let list = new List(req.body);
   list.updated_at = new Date();
 
+  list.items = list.items.map((item) => {
+    item.created_at = new Date();
+    item.updated_at = new Date();
+
+    return item;
+  });
+
   list.save((err) => {
     if (err) {
       return res.json({
@@ -62,12 +69,16 @@ router.put(`/lists/:id/items/:item_id`, (req, res) => {
         });
       }
 
-      list.items.push(req.body);
+      item = req.body;
+      item.created_at = new Date();
+
+      list.items.push(item);
     } else {
       list.items.map((i) => {
         if (i._id.toString() == req.params.item_id) {
           i.title = req.body.title;
           i.done = req.body.done;
+          i.updated_at = new Date();
         }
 
         return i;
