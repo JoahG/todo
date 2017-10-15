@@ -62,7 +62,7 @@ app.get(`/*`, (req, res) => {
     <html>
       <head>
         <meta charset="utf-8">
-        <title>Simple Todo</title>
+        <title>Simple List</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -75,6 +75,16 @@ app.get(`/*`, (req, res) => {
 
         <script type="text/javascript" src="/vendor.bundle.min.js?${ app.get(`git_head`) }"></script>
         <script type="text/javascript" src="/app.bundle.min.js?${ app.get(`git_head`) }"></script>
+
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-92424942-4"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'UA-92424942-4');
+        </script>
       </body>
     </html>
   `.replace(/\n/g, ``).replace(/\s+/g, ` `).replace(/\>\s\</g, `><`));

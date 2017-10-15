@@ -29,7 +29,7 @@ class App extends React.Component {
         </main>
         <footer>
           <div>
-            Simple Todo List built with ❤️ by <a href="http://www.joahg.com">Joah Gerstenberg</a>
+            Simple List built with ❤️ by <a href="http://www.joahg.com">Joah Gerstenberg</a>
           </div>
         </footer>
       </div>
