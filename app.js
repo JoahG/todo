@@ -56,7 +56,8 @@ app.get(`/*`, (req, res) => {
         <meta charset="utf-8">
         <title>Simple List</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="description" content="">
+        <meta name="description" content="Create todo lists quickly and share them with a single link.">
+        <meta name="keywords" content="Productivity,Todo List,Todo,To do,List,Simple List">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700" rel="stylesheet">
         <link rel="stylesheet" href="/styles.bundle.css?${ app.get(`git_head`) }">
@@ -68,7 +69,6 @@ app.get(`/*`, (req, res) => {
         <script type="text/javascript" src="/vendor.bundle.min.js?${ app.get(`git_head`) }"></script>
         <script type="text/javascript" src="/app.bundle.min.js?${ app.get(`git_head`) }"></script>
 
-        <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-92424942-4"></script>
         <script>
           window.dataLayer = window.dataLayer || [];
